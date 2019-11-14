@@ -19,6 +19,11 @@ Future<String> getInitialLink() async {
   return initialLink;
 }
 
+Future<String> getInstallReferrer() async {
+  final String installReferrer = await _mChannel.invokeMethod('getInstallReferrer');
+  return installReferrer;
+}
+
 /// A convenience method that returns the initially stored link
 /// as a new [Uri] object.
 ///

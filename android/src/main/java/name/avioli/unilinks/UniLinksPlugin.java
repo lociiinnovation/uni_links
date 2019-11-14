@@ -36,7 +36,7 @@ public class UniLinksPlugin
 
   private String initialLink;
   private String latestLink;
-  private static String referrer;
+  private static String referrer = null;
 
   private static InstallReferrerClient mReferrerClient;
 
@@ -83,13 +83,9 @@ public class UniLinksPlugin
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("getInitialLink")) {
-      final List<String> linkData = new ArrayList<>();
-      linkData.add(initialLink);
-      if (referrer != null)
-      linkData.add(referrer);
-      result.success(linkData);
-      // } else if (call.method.equals("getLatestLink")) {
-      //   result.success(latestLink);
+      result.success(initialLink);
+       } else if (call.method.equals("getInstallReferrer")) {
+         result.success(referrer);
     } else {
       result.notImplemented();
     }
