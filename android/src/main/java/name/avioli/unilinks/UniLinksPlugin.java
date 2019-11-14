@@ -18,7 +18,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** UniLinksPlugin */
 public class UniLinksPlugin
-    implements MethodCallHandler, StreamHandler, PluginRegistry.NewIntentListener {
+    implements MethodCallHandler, StreamHandler, PluginRegistry.NewIntentListener, InstallReferrerStateListener {
   private static final String MESSAGES_CHANNEL = "uni_links/messages";
   private static final String EVENTS_CHANNEL = "uni_links/events";
 
@@ -27,9 +27,13 @@ public class UniLinksPlugin
 
   private String initialLink;
   private String latestLink;
+  private String referrer;
+
+  private static InstallReferrerClient mReferrerClient;
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
+
     // Detect if we've been launched in background
     if (registrar.activity() == null) {
       return;
@@ -37,15 +41,20 @@ public class UniLinksPlugin
 
     UniLinksPlugin instance = new UniLinksPlugin(registrar);
 
+    //todo: detect first app launch to get referrer
+
+    mReferrerClient = InstallReferrerClient.newBuilder(registrar.activity()).build();
+    mReferrerClient.startConnection(registrar.activity());
+  
+
     final MethodChannel mChannel = new MethodChannel(registrar.messenger(), MESSAGES_CHANNEL);
     mChannel.setMethodCallHandler(instance);
 
     final EventChannel eChannel = new EventChannel(registrar.messenger(), EVENTS_CHANNEL);
     eChannel.setStreamHandler(instance);
 
-    registrar.addNewIntentListener(instance);
+    registrar.addNewIntentListener(instance);   
   }
-
   private UniLinksPlugin(Registrar registrar) {
     this.registrar = registrar;
     handleIntent(registrar.context(), registrar.activity().getIntent(), true);
@@ -65,7 +74,11 @@ public class UniLinksPlugin
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("getInitialLink")) {
-      result.success(initialLink);
+      final List<String> linkData = new ArrayList<>();
+      linkDatas.add(initialLink);
+      if (referrer != null)
+      linkData.add(referrer);
+      result.success(linkData);
       // } else if (call.method.equals("getLatestLink")) {
       //   result.success(latestLink);
     } else {
@@ -90,6 +103,39 @@ public class UniLinksPlugin
   public boolean onNewIntent(Intent intent) {
     handleIntent(registrar.context(), intent, false);
     return false;
+  }
+
+  @Override
+  public void onInstallReferrerSetupFinished(int responseCode) {
+    switch (responseCode) {
+    case InstallReferrerClient.InstallReferrerResponse.OK:
+      // Connection established
+      try {
+        //get referrer data
+        ReferrerDetails response = mReferrerClient.getInstallReferrer();
+        referrer = response.getInstallReferrer();
+        mReferrerClient.endConnection();
+      } catch (RemoteException e) {
+        e.printStackTrace();
+      }
+
+      break;
+    case InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
+      // API not available on the current Play Store app
+      break;
+    case InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE:
+      // Connection could not be established
+      break;
+    case InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR:
+      break;
+    case InstallReferrerClient.InstallReferrerResponse.SERVICE_DISCONNECTED:
+      break;
+    }
+  }
+
+  @Override
+  public void onInstallReferrerServiceDisconnected() {
+
   }
 
   private BroadcastReceiver createChangeReceiver(final EventSink events) {
