@@ -3,9 +3,15 @@ package name.avioli.unilinks;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.RemoteException;
+
 import com.android.installreferrer.api.InstallReferrerClient;
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -30,7 +36,7 @@ public class UniLinksPlugin
 
   private String initialLink;
   private String latestLink;
-  private String referrer;
+  private static String referrer;
 
   private static InstallReferrerClient mReferrerClient;
 
@@ -47,7 +53,7 @@ public class UniLinksPlugin
     //todo: detect first app launch to get referrer
 
     mReferrerClient = InstallReferrerClient.newBuilder(registrar.activity()).build();
-    mReferrerClient.startConnection(registrar.activity());
+    mReferrerClient.startConnection(instance);
   
 
     final MethodChannel mChannel = new MethodChannel(registrar.messenger(), MESSAGES_CHANNEL);
@@ -78,7 +84,7 @@ public class UniLinksPlugin
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("getInitialLink")) {
       final List<String> linkData = new ArrayList<>();
-      linkDatas.add(initialLink);
+      linkData.add(initialLink);
       if (referrer != null)
       linkData.add(referrer);
       result.success(linkData);
