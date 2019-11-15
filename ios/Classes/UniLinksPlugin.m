@@ -78,8 +78,16 @@ static id _instance;
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([@"getInitialLink" isEqualToString:call.method]) {
     result(self.initialLink);
-    // } else if ([@"getLatestLink" isEqualToString:call.method]) {
-    //     result(self.latestLink);
+     } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
+       NSString *referrer = nil;
+       //check app first launch
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    referrer = [self getReferrer];
+}
+         result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -94,6 +102,23 @@ static id _instance;
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
   _eventSink = nil;
   return nil;
+}
+
+- (NSString *) getReferrer {
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
+    [request setHTTPMethod:@"GET"];
+    [request setURL:[NSURL URLWithString:url]];
+    NSError *error = nil;
+    NSHTTPURLResponse *responseCode = nil;
+    NSData *JSONData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
+    if([responseCode statusCode] != 200){
+        NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
+        return @"nothing";
+    }
+        id jsonResult = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:nil];
+   // return jsonResult[@"referrer"];
+   return jsonResult[@"title"];
 }
 
 @end
