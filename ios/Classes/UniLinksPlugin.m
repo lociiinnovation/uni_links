@@ -81,12 +81,13 @@ static id _instance;
      } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
        NSString *referrer = @"test";
        //check app first launch
-//         if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
-// {
-//     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
-//     [[NSUserDefaults standardUserDefaults] synchronize];
-//     referrer = [self getReferrer];
-// }
+         if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
+ {
+     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
+       NSString *url = call.arguments as! [String:Any];
+     referrer = [self getReferrer:url];
+ }
          result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
@@ -104,9 +105,9 @@ static id _instance;
   return nil;
 }
 
-- (NSString *) getReferrer {
+- (NSString *) getReferrer (NSString *)url {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
+   // NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
     NSError *error = nil;
