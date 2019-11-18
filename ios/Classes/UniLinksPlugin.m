@@ -84,7 +84,7 @@ static id _instance;
 // {
     // [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
     // [[NSUserDefaults standardUserDefaults] synchronize];
-       NSString *url = call.arguments as! [String:Any];
+       NSString *url = call.arguments[@"url"];
      referrer = [self getReferrer:url];
  //}
          result(referrer);
