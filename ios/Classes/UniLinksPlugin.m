@@ -86,7 +86,8 @@ static id _instance;
  //   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
  //   [[NSUserDefaults standardUserDefaults] synchronize];
      //  NSString *url = call.arguments[@"url"];
-     referrer = [self getReferrer];
+         NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
+     referrer = [self getReferrer: url];
 // }
          result(referrer);
   } else {
@@ -105,9 +106,8 @@ static id _instance;
   return nil;
 }
 
-- (NSString *) getReferrer {
+- (NSString *) getReferrer : (NSString *) url {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
     NSError *error = nil;
