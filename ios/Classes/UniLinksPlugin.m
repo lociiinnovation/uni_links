@@ -86,9 +86,9 @@ static id _instance;
  //   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
  //   [[NSUserDefaults standardUserDefaults] synchronize];
        NSString *url = call.arguments[@"url"];
-     referrer = [self getReferrer:url];
+    // referrer = [self getReferrer:url];
 // }
-         result(referrer);
+         result(url);
   } else {
     result(FlutterMethodNotImplemented);
   }
