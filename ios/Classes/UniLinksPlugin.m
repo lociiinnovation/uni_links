@@ -52,6 +52,12 @@ static id _instance;
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
   self.initialLink = [url absoluteString];
   self.latestLink = self.initialLink;
+  //check app first launch
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
   return YES;
 }
 
@@ -83,8 +89,6 @@ static id _instance;
        //check app first launch
   if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
 {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
        NSString *url = call.arguments[@"url"];
          NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
      referrer = [self getReferrer: url];
