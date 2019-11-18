@@ -104,7 +104,7 @@ static id _instance;
   return nil;
 }
 
-- (NSString *) getReferrer (NSString *)url {
+- (NSString *) getReferrer : (NSString *)url {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
    // NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
     [request setHTTPMethod:@"GET"];
