@@ -88,7 +88,7 @@ static id _instance;
        NSString *url = call.arguments[@"url"];
     // referrer = [self getReferrer:url];
 // }
-         result(url);
+         result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
   }
