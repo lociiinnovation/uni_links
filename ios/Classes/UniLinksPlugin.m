@@ -80,8 +80,8 @@ static id _instance;
     result(self.initialLink);
      } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
        NSString *referrer = @"test";
-       NSString *url = call.arguments[@"url"];
-    //  *url = @"https://jsonplaceholder.typicode.com/todos/1";
+     //  NSString *url = call.arguments[@"url"];
+     NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
      referrer = [self getReferrer: url];
          result(referrer);
   } else {
