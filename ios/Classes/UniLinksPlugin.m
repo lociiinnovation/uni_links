@@ -79,7 +79,7 @@ static id _instance;
   if ([@"getInitialLink" isEqualToString:call.method]) {
     result(self.initialLink);
      } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
-       NSString *referrer = nil;
+       NSString *referrer = @"test";
        //check app first launch
 //  if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
 //{
