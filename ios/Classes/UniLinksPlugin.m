@@ -80,13 +80,13 @@ static id _instance;
     result(self.initialLink);
      } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
        //check app first launch
-       //  if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
+  //if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
 // {
-  //   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
-  //   [[NSUserDefaults standardUserDefaults] synchronize];
+    // [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
+    // [[NSUserDefaults standardUserDefaults] synchronize];
        NSString *url = call.arguments as! [String:Any];
      referrer = [self getReferrer:url];
-// }
+ //}
          result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
