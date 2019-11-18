@@ -19,7 +19,7 @@ Future<String> getInitialLink() async {
   return initialLink;
 }
 
-Future<String> getInstallReferrer([String url]) async {
+Future<String> getInstallReferrer({String url}) async {
   final String installReferrer = await _mChannel.invokeMethod('getInstallReferrer', url);
   return installReferrer;
 }
