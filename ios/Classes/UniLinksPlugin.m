@@ -89,7 +89,7 @@ static id _instance;
        //check app first launch
   if (![[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
 {
-       NSString *url = call.arguments[@"url"];
+    //   NSString *url = call.arguments[@"url"];
          NSString *url = @"https://jsonplaceholder.typicode.com/todos/1";
      referrer = [self getReferrer: url];
  }
