@@ -111,7 +111,7 @@ static id _instance;
     NSData *JSONData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
     if([responseCode statusCode] != 200){
         NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
-        return userAgent;
+        return [request valueForHTTPHeaderField:@"User-Agent"];
     }
         id jsonResult = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:nil];
    // return jsonResult[@"referrer"];
