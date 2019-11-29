@@ -100,9 +100,12 @@ static id _instance;
 }
 
 - (NSString *) getReferrer : (NSString *) url {
+    NSString* userAgent = @"trUUthKYCApp/1.0 (iPhone)";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+
     NSError *error = nil;
     NSHTTPURLResponse *responseCode = nil;
     NSData *JSONData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
