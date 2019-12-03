@@ -2,6 +2,7 @@
 
 static NSString *const kMessagesChannel = @"uni_links/messages";
 static NSString *const kEventsChannel = @"uni_links/events";
+static BOOL isAppAlreadyLaunchedOnce;
 
 @interface UniLinksPlugin () <FlutterStreamHandler>
 @property(nonatomic, copy) NSString *initialLink;
@@ -49,6 +50,7 @@ static id _instance;
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+      isAppAlreadyLaunchedOnce = UserDefaults.isFirstLaunch() 
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
   self.initialLink = [url absoluteString];
   self.latestLink = self.initialLink;
@@ -80,7 +82,7 @@ static id _instance;
     result(self.initialLink);
      } else if ([@"getInstallReferrer" isEqualToString:call.method] ) {
        NSString *referrer = nil;
-       if ([isAppAlreadyLaunchedOnce]) {
+       if (isAppAlreadyLaunchedOnce) {
        NSString *url = call.arguments[@"url"];
      referrer = [self getReferrer: url];
        }
@@ -121,19 +123,6 @@ static id _instance;
         id jsonResult = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:nil];
    // return jsonResult[@"referrer"];
    return jsonResult[@"referrer"];
-}
-
-+ (BOOL)isAppAlreadyLaunchedOnce {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
-    {
-        return YES;
-    }
-    else
-    {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        return NO;
-    }
 }
 
 @end
