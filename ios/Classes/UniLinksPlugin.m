@@ -84,6 +84,9 @@ static id _instance;
        NSString *url = call.arguments[@"url"];
      referrer = [self getReferrer: url];
        }
+       else {
+         referrer = @"isAppAlreadyLaunchedOnce";
+       }
          result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
