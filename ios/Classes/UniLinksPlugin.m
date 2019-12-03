@@ -50,7 +50,6 @@ static id _instance;
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-      isAppAlreadyLaunchedOnce = UserDefaults.isFirstLaunch() 
   NSURL *url = (NSURL *)launchOptions[UIApplicationLaunchOptionsURLKey];
   self.initialLink = [url absoluteString];
   self.latestLink = self.initialLink;
@@ -111,18 +110,18 @@ if ([defaults boolForKey:hasRunAppOnceKey] == NO)
 }
 
 - (NSString *) getReferrer : (NSString *) url {
-    NSString* userAgent = @"trUUthKYCApp/1.0 (iPhone)";
+    //NSString* userAgent = @"trUUthKYCApp/1.0 (iPhone)";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
-    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    //[request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
     NSError *error = nil;
     NSHTTPURLResponse *responseCode = nil;
     NSData *JSONData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
     if([responseCode statusCode] != 200){
         NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
-        return [request valueForHTTPHeaderField:@"User-Agent"];
+        return nil;
     }
         id jsonResult = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:nil];
    // return jsonResult[@"referrer"];
