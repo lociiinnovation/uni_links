@@ -78,10 +78,12 @@ static id _instance;
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([@"getInitialLink" isEqualToString:call.method]) {
     result(self.initialLink);
-     } else if ([@"getInstallReferrer" isEqualToString:call.method]) {
-       NSString *referrer = @"test";
+     } else if ([@"getInstallReferrer" isEqualToString:call.method] ) {
+       NSString *referrer = nil;
+       if ([isAppAlreadyLaunchedOnce]) {
        NSString *url = call.arguments[@"url"];
      referrer = [self getReferrer: url];
+       }
          result(referrer);
   } else {
     result(FlutterMethodNotImplemented);
@@ -116,6 +118,19 @@ static id _instance;
         id jsonResult = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:nil];
    // return jsonResult[@"referrer"];
    return jsonResult[@"referrer"];
+}
+
++ (BOOL)isAppAlreadyLaunchedOnce {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isAppAlreadyLaunchedOnce"])
+    {
+        return YES;
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAppAlreadyLaunchedOnce"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        return NO;
+    }
 }
 
 @end

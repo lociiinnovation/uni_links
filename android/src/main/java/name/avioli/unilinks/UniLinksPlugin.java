@@ -3,6 +3,7 @@ package name.avioli.unilinks;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.RemoteException;
 
 import com.android.installreferrer.api.InstallReferrerClient;
@@ -30,7 +31,6 @@ public class UniLinksPlugin
     implements MethodCallHandler, StreamHandler, PluginRegistry.NewIntentListener, InstallReferrerStateListener {
   private static final String MESSAGES_CHANNEL = "uni_links/messages";
   private static final String EVENTS_CHANNEL = "uni_links/events";
-
   private BroadcastReceiver changeReceiver;
   private Registrar registrar;
 
@@ -50,10 +50,14 @@ public class UniLinksPlugin
 
     UniLinksPlugin instance = new UniLinksPlugin(registrar);
 
-    //todo: detect first app launch to get referrer
-
-    mReferrerClient = InstallReferrerClient.newBuilder(registrar.activity()).build();
-    mReferrerClient.startConnection(instance);
+    //get install referrer at first run
+    SharedPreferences pref = registrar.activity().getSharedPreferences("preferences",0 );
+    Boolean isFirstRun = pref.getBoolean("isFirstRun", true);
+   if (isFirstRun) {
+     mReferrerClient = InstallReferrerClient.newBuilder(registrar.activity()).build();
+     mReferrerClient.startConnection(instance);
+     pref.edit().putBoolean("isFirstRun", false).commit();
+   }
   
 
     final MethodChannel mChannel = new MethodChannel(registrar.messenger(), MESSAGES_CHANNEL);
