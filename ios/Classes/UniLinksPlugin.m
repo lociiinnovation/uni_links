@@ -2,7 +2,7 @@
 
 static NSString *const kMessagesChannel = @"uni_links/messages";
 static NSString *const kEventsChannel = @"uni_links/events";
-static BOOL isAppAlreadyLaunchedOnce;
+static NSString* const hasRunAppOnceKey = @"hasRunAppOnceKey";
 
 @interface UniLinksPlugin () <FlutterStreamHandler>
 @property(nonatomic, copy) NSString *initialLink;
@@ -82,10 +82,14 @@ static id _instance;
     result(self.initialLink);
      } else if ([@"getInstallReferrer" isEqualToString:call.method] ) {
        NSString *referrer = nil;
-       if (isAppAlreadyLaunchedOnce) {
-       NSString *url = call.arguments[@"url"];
-     referrer = [self getReferrer: url];
-       }
+       NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+{
+    [defaults setBool:YES forKey:hasRunAppOnceKey];
+
+ NSString *url = call.arguments[@"url"];
+     referrer = [self getReferrer: url];}
+       
        else {
          referrer = @"isAppAlreadyLaunchedOnce";
        }
