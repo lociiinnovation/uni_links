@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       initialLink = await getInitialLink();
       print('initial link: $initialLink');
       if (initialLink != null) initialUri = Uri.parse(initialLink);
+      else initialLink = await getInstallReferrer();
     } on PlatformException {
       initialLink = 'Failed to get initial link.';
       initialUri = null;

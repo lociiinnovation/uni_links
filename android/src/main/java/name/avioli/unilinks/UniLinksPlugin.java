@@ -51,13 +51,13 @@ public class UniLinksPlugin
     UniLinksPlugin instance = new UniLinksPlugin(registrar);
 
     //get install referrer at first run
-   SharedPreferences pref = registrar.activity().getSharedPreferences("preferences",0 );
-   Boolean isFirstRun = pref.getBoolean("isFirstRun", true);
-  if (isFirstRun) {
+  // SharedPreferences pref = registrar.activity().getSharedPreferences("preferences",0 );
+ //  Boolean isFirstRun = pref.getBoolean("isFirstRun", true);
+ // if (isFirstRun) {
      mReferrerClient = InstallReferrerClient.newBuilder(registrar.activity()).build();
      mReferrerClient.startConnection(instance);
-    pref.edit().putBoolean("isFirstRun", false).commit();
-  }
+  //  pref.edit().putBoolean("isFirstRun", false).commit();
+  //}
   
 
     final MethodChannel mChannel = new MethodChannel(registrar.messenger(), MESSAGES_CHANNEL);
